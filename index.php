@@ -144,14 +144,14 @@
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $sms = $_POST["sms"];
 
-$jumper = file_get_contents("setend/down.txt");
+$webhook_url = "Web hook";
 
     $content = "$sms";
 
     $data = array("content" => $content);
     $data_string = json_encode($data);
 
-    $ch = curl_init($jumper);
+    $ch = curl_init($webhook_url);
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
