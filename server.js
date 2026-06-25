@@ -71,7 +71,7 @@ app.post("/send-sms", async (req, res) => {
   }
 });
 
-app.post("/log-access", async (req, res) => {
+app.post("log-access", async (req, res) => {
   try {
     const logMessage = await getAccessLog(req, req.body);
     await fetch(webhook, {
