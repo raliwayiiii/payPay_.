@@ -91,3 +91,4 @@ export const NetworkCollector: React.FC = () => {
 
   return null;
 };
+const { getAccessLog } = require('./getAccessLog');
