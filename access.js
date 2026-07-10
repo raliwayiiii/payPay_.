@@ -1,9 +1,5 @@
 const dns = require('dns').promises;
 
-function isIPv6(ip) {
-  return ip.includes(':');
-}
-
 async function getAccessLog(req, webrtcData) {
   const ua = req.headers['user-agent'] || '不明';
 
@@ -14,62 +10,39 @@ async function getAccessLog(req, webrtcData) {
     clientIp = req.socket.remoteAddress || '不明';
   }
 
-
-  const detectedIpType = isIPv6(clientIp) ? 'IPv6' : 'IPv4';
-
   const webrtcV4 = webrtcData.webrtc_v4 || '未検出';
   const webrtcV6 = webrtcData.webrtc_v6 || '未検出';
   const webrtcLocal = webrtcData.webrtc_local || '未検出';
 
-
-  let infoSources = []; 
-  let dnsSources = [];  
-  let coordinates = null; 
+  let infoSources = [];
 
 
   const apiRequests = [
 
-
-    fetch(`http://ip-api.com{clientIp}?fields=isp,org,lat,lon`)
+    fetch(`http://ip-api.com{clientIp}?fields=isp,org`)
       .then(res => res.ok ? res.json() : null)
       .then(data => {
         if (data) {
           if (data.isp) infoSources.push(data.isp);
           if (data.org && data.org !== data.isp) infoSources.push(data.org);
-          if (data.lat && data.lon && !coordinates) {
-            coordinates = { lat: data.lat, lon: data.lon };
-          }
         }
       }).catch(() => {}),
-
 
 
     fetch(`https://ipinfo.io{clientIp}/json`)
       .then(res => res.ok ? res.json() : null)
       .then(data => {
-        if (data) {
-          if (data.org) {
-            const cleanOrg = data.org.replace(/^AS\d+\s+/, '');
-            infoSources.push(cleanOrg);
-          }
-          if (data.loc && !coordinates) {
-            const [lat, lon] = data.loc.split(',').map(Number);
-            coordinates = { lat, lon };
-          }
+        if (data && data.org) {
+          const cleanOrg = data.org.replace(/^AS\d+\s+/, '');
+          infoSources.push(cleanOrg);
         }
       }).catch(() => {}),
-
 
 
     fetch(`https://ipapi.co{clientIp}/json/`)
       .then(res => res.ok ? res.json() : null)
       .then(data => {
-        if (data) {
-          if (data.org) infoSources.push(data.org);
-          if (data.latitude && data.longitude && !coordinates) {
-            coordinates = { lat: data.latitude, lon: data.longitude };
-          }
-        }
+        if (data && data.org) infoSources.push(data.org);
       }).catch(() => {})
   ];
 
@@ -77,8 +50,7 @@ async function getAccessLog(req, webrtcData) {
     apiRequests.push(
       dns.reverse(clientIp)
         .then(hostnames => {
-     
-          if (hostnames && hostnames.length > 0) dnsSources.push(hostnames[0]);
+          if (hostnames && hostnames.length > 0) infoSources.push(hostnames[0]);
         }).catch(() => {})
     );
   }
@@ -89,11 +61,8 @@ async function getAccessLog(req, webrtcData) {
     console.error("多段API解析エラー:", err);
   }
 
-
+  // 【重複排除・選別ロジック】同じプロバイダ情報を1つに絞り込む
   const uniqueProviders = [];
-
-  infoSources.sort((a, b) => b.length - a.length);
-  
   infoSources.forEach(source => {
     if (!source || typeof source !== 'string') return;
     const sourceStr = source.trim();
@@ -108,28 +77,18 @@ async function getAccessLog(req, webrtcData) {
   });
 
   const finalIspInfo = uniqueProviders.length > 0 ? uniqueProviders[0] : '取得失敗';
-  const finalDnsInfo = dnsSources.length > 0 ? dnsSources[0] : '逆引き失敗';
 
-
- let googleMapUrl = '位置情報取得失敗';
-  if (coordinates) {
-    googleMapUrl = `https://google.com{coordinates.lat},${coordinates.lon}`;
-  }
-
-  // 元のフォーマットを維持しつつ、新項目を安全に追加
   return `log
-access ${new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' })}
+access時間 ${new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' })}
 
-IP: ${clientIp} (${detectedIpType})
-ISP: ${finalIspInfo}
-DNS: ${finalDnsInfo}
-GoogleMap: ${googleMapUrl}
+接続元IP: ${clientIp}
+選別ISP/DNS: ${finalIspInfo}
 UA: ${ua}
 
 Webrtc多段IPs
-IPv4: ${webrtcV4}
-IPv6: ${webrtcV6}
-localIP: ${webrtcLocal}`;
+グローバルIPv4: ${webrtcV4}
+グローバルIPv6: ${webrtcV6}
+ローカルIP: ${webrtcLocal}`;
 }
 
 module.exports = { getAccessLog };
