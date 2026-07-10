@@ -2,12 +2,14 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "CommonJS",
+    "allowJs": true,           
+    "jsx": "react",            
     "outDir": "./dist",
     "rootDir": "./",
-    "strict": true,
+    "strict": false,          
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["**/*.ts"]
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js"]
 }
